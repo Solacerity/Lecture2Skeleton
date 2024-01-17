@@ -265,11 +265,11 @@
                 },
                 {
                     "name": "",
-                    "id": "52a84d1b-add8-425e-95dd-7943170641af",
+                    "id": "f6d6ef17-2bca-44f9-a42d-a700c1bbda79",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard&Mouse",
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
