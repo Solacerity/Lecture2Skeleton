@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     Rigidbody rb;
     Transform tr;
     SphereCollider col;
+    PlayerInput player;
 
     // TODO: add variables for speed, jumpHeight, and respawnHeight (done)
     [SerializeField] float speed = 5f;
@@ -24,7 +25,8 @@ public class PlayerController : MonoBehaviour
     bool onGround = false;
 
     UnityEvent flatten;
-    UnityEvent unflatten;   
+    UnityEvent unflatten;
+    bool isFlat = false;
 
 
     // Start is called before the first frame update
@@ -34,6 +36,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         tr = GetComponent<Transform>();
         col = GetComponent<SphereCollider>();
+        player = GetComponent<PlayerInput>();
 
         if (flatten == null)
         {
@@ -60,7 +63,7 @@ public class PlayerController : MonoBehaviour
             Respawn();
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && flatten != null)
+        /*if (Input.GetKeyDown(KeyCode.LeftShift) && flatten != null)
         {
             flatten.Invoke();
         }
@@ -68,8 +71,13 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.LeftShift) && unflatten != null)
         {
             unflatten.Invoke();
+        }*/
+
+        if (player.actions["Flatten"].WasReleasedThisFrame() && isFlat)
+        {
+            unflatten.Invoke();
+            isFlat = false;
         }
-        
     }
 
     void OnJump()
@@ -138,5 +146,15 @@ public class PlayerController : MonoBehaviour
     {
         tr.localScale = new Vector3(tr.localScale.x * 0.5f, tr.localScale.y * 2f, tr.localScale.z * 0.5f);
         col.radius *= 4f;
+    }
+
+    void OnFlatten()
+    {
+        if (!isFlat)
+        {
+            flatten.Invoke();
+        }
+
+        isFlat = true;
     }
 }
