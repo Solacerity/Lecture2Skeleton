@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +12,8 @@ public class PlayerController : MonoBehaviour
 {
     // TODO: add component references (done)
     Rigidbody rb;
+    Transform tr;
+    SphereCollider col;
 
     // TODO: add variables for speed, jumpHeight, and respawnHeight (done)
     [SerializeField] float speed = 5f;
@@ -20,13 +23,32 @@ public class PlayerController : MonoBehaviour
     // TODO: add variable to check if we're on the ground (done)
     bool onGround = false;
 
+    UnityEvent flatten;
+    UnityEvent unflatten;   
+
 
     // Start is called before the first frame update
     void Start()
     {
         // TODO: Get references to the components attached to the current GameObject (done)
         rb = GetComponent<Rigidbody>();
+        tr = GetComponent<Transform>();
+        col = GetComponent<SphereCollider>();
 
+        if (flatten == null)
+        {
+            flatten = new UnityEvent();
+        }
+
+        flatten.AddListener(Flatten);
+
+        if (unflatten == null)
+        {
+            unflatten = new UnityEvent();
+        }
+
+        unflatten.AddListener(Unflatten);
+        
     }
 
     // Update is called once per frame
@@ -37,6 +59,17 @@ public class PlayerController : MonoBehaviour
         {
             Respawn();
         }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) && flatten != null)
+        {
+            flatten.Invoke();
+        }
+        
+        if (Input.GetKeyUp(KeyCode.LeftShift) && unflatten != null)
+        {
+            unflatten.Invoke();
+        }
+        
     }
 
     void OnJump()
@@ -93,5 +126,17 @@ public class PlayerController : MonoBehaviour
     {
         // TODO: reload current scene
         rb.position = new Vector3(3, 3, 3);
+    }
+
+    private void Flatten()
+    {
+        tr.localScale = new Vector3(tr.localScale.x * 2f, tr.localScale.y * 0.5f, tr.localScale.z * 2f);
+        col.radius *= 0.25f;
+    }
+
+    private void Unflatten()
+    {
+        tr.localScale = new Vector3(tr.localScale.x * 0.5f, tr.localScale.y * 2f, tr.localScale.z * 0.5f);
+        col.radius *= 4f;
     }
 }
