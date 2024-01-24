@@ -121,13 +121,30 @@ public class PlayerController : MonoBehaviour
     void OnCollisionStay(Collision collision)
     {
         // TODO: Check if we are in contact with the ground. If we are, note that we are grounded (done)
-        onGround = true;
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            onGround = true;
+        }
+
+        /* Alternate Way: Checking is ground is flat enough (not too steep)
+        
+        Vector3 norm = collision.GetContact(0).normal;
+
+        if (Vector3.Angle(norm, Vector3.up) < 45f)
+        {
+            onGround = true;
+        }
+
+        */
     }
 
     void OnCollisionExit(Collision collision)
     {
         // TODO: When we leave the ground, we are no longer grounded (done)
-        onGround = false;
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            onGround = false;
+        }
     }
 
     private void Respawn()
